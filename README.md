@@ -20,16 +20,16 @@ Project consists of using Security Information and Event Management tools to col
 
 <p align="center">
 Create a Virtual Machine on Azure: 
- <br/> The goal is to make the VM very discoverable so that people start attacking it. Normally we wouldn’t want to do this, but for the purpose of our lab we are making it enticing and discoverable to people so that we use SIEM tools to analyze our data.
+ <br/> We are creating a honeypot so that it's enticing and discoverable to people. We'll use SIEM tools to analyze our data.
 <img src="https://i.imgur.com/2kbi9x9.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br /> 
 <br />
-Next we create a new resource group. This is a logical grouping of resources on Azure that usually share the same lifespan. Everything in this lab will be put in this resource group.:
+Next we create a new resource group. This is a logical grouping of resources on Azure that usually share the same lifespan. Everything in this lab will be put in this resource group:
  <br/>
 <img src="https://i.imgur.com/z97JIRD.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
-Open Log Analytics Workspaces (LAW): The purpose for creating a new LAW is to ingest logs into our VM. We will ingest the Windows Event Logs and create our own custom log that contains geographic information to discover where these attacks are coming from. Our SIEM will connect to this workspace to display the geodata on the map. <br/>
+Next we'll open Log Analytics Workspaces (LAW): The purpose for creating a new LAW is to ingest logs into our VM. We will ingest the Windows Event Logs and create our own custom log that contains geographic information to discover where these attacks are coming from. Our SIEM will connect to this workspace to display the geodata on the map. <br/>
 <img src="https://i.imgur.com/6dnyAMU.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 <br />
@@ -40,8 +40,54 @@ Connect VM to our workspace:  <br/>
 Set up Azure Sentinel:  <br/>
 <img src="https://i.imgur.com/qizXDLl.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
-<br />Nessus can be configured to schedule regular scans and monitor the network continuously, ensuring that any new vulnerabilities are promptly identified and addressed.
+<br />
+API using ipgeolocation website + Run PowerShell script:  <br/>
+ Using the ipgeolocation website, we are able to use the API to return location information. We will use this information to create our own custom log and send that log to analytics workspace. We will use Sentinel to read the latitude and longitude and then plot this on our map. By running the PowerShell script we are able to get our geodata from attackers. 
+<p align="center">
+ After some time, our honeypot is under attack. We can observe how people from all over the world are trying to brute force their way in. <br/>
+<img src="https://i.imgur.com/kqUk3tp.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<p align="center">
+Next, we'll create custom logs in order to train log analytics for what to look for in the attacks logs when extracting data. <br/>
+<img src="https://i.imgur.com/JN3LciJ.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<p align="center">
+Example field extraction: <br/>
+<img src="https://i.imgur.com/0XRUH5v.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 
+<p align="center">
+All custom fields for log extraction: <br/>
+<img src="https://i.imgur.com/hMLXNQh.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+Next we'll create a new workbook in Sentinel. We must wait a few moments to see how discoverable our honeypot has become. As this is happening, our query will continue to run on Sentinel and populating our map with attacks: <br/>
+<img src="https://i.imgur.com/pe1QrSu.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+Our honeypot has attracted many attackers. Here we see the logs our custom fields have created for each potential threat: <br/>
+<img src="https://i.imgur.com/jU8Eg1f.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+<p align="center">
+Attack map after 5 hours:  <br/>
+ Our SIEM tool has automatically created a map with data representing geolocations for each attack!
+<img src="https://i.imgur.com/OiZydu1.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+ <p align="center">
+Attack map after 10 hours:  <br/>
+ As our VM continues to be online, Sentinel will continue populating this map with new attackers. 
+<img src="https://i.imgur.com/nNfHxV0.jpg" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+
+ <p align="center">
+Key Takeaways!  <br/>
+  
+  - As soon as any of your devices connect to the internet they are exposed to people from all around the world who will be able to discover and potentially try to gain access to your devices in some way.
+
+    
+  - Make sure you have strong password habits. Most failed log on attempts captured in our logs shows how brute force attacks may help an attacker gain access simply because the password wasn’t strong enough to 
+    keep them out.
+
+    
+  - Cybersecurity analysts may use technology such as Azure Sentinel to help aid their security for their organizations in the same manner! By staying up to date on the latest security tools we can help fortify a strong security posture for your organization and keep its integrity intact.
+
+    
 </p>
 
 <!--
